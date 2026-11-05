@@ -1,0 +1,65 @@
+.adm { max-width: 1200px; margin: 0 auto; padding: 20px 16px 60px; }
+.adm-center { min-height: 100vh; display: grid; place-items: center; padding: 16px; }
+.adm-top { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; }
+.adm-top h1 { font-size: 1.5rem; }
+.adm-top small { color: var(--muted); }
+.adm-top-actions { display: flex; align-items: center; gap: 16px; }
+.adm-link { background: none; border: 0; padding: 0; cursor: pointer; color: var(--accent); font-weight: 600; font-size: .92rem; }
+.adm-link:hover { text-decoration: underline; }
+.adm-link.danger { color: #b42318; }
+.adm-banner { display: flex; justify-content: space-between; gap: 16px; align-items: center; background: #fff7e6; border: 1px solid #ffd591; border-radius: var(--radius); padding: 12px 14px; margin-bottom: 16px; font-size: .9rem; }
+.adm-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 16px; }
+.adm-stats div { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 14px; display: flex; flex-direction: column; }
+.adm-stats b { font-size: 1.5rem; }
+.adm-stats span { color: var(--muted); font-size: .82rem; }
+.adm-search { width: 100%; max-width: 360px; padding: 10px 12px; border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 12px; }
+.adm-table-wrap { overflow-x: auto; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); }
+.adm-table { width: 100%; border-collapse: collapse; min-width: 760px; }
+.adm-table th, .adm-table td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); font-size: .92rem; vertical-align: middle; }
+.adm-table th { background: #fafbfc; font-size: .78rem; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); }
+.adm-table tr:last-child td { border-bottom: 0; }
+.adm-table s { color: var(--muted); margin-left: 6px; font-size: .8rem; }
+.adm-prod { display: flex; align-items: center; gap: 10px; min-width: 240px; }
+.adm-prod img { width: 44px; height: 44px; object-fit: cover; border-radius: 4px; background: #f1f2f4; flex-shrink: 0; }
+.adm-table td:nth-child(3) { white-space: nowrap; }
+.adm-actions { display: flex; gap: 14px; }
+.adm-empty { text-align: center !important; color: var(--muted); padding: 28px !important; }
+
+.switch { position: relative; display: inline-block; width: 38px; height: 22px; }
+.switch input { position: absolute; opacity: 0; inset: 0; width: 100%; height: 100%; margin: 0; cursor: pointer; z-index: 1; }
+.switch span { position: absolute; inset: 0; background: #ccd0d5; border-radius: 11px; transition: background .15s; }
+.switch span::after { content: ''; position: absolute; top: 3px; left: 3px; width: 16px; height: 16px; background: #fff; border-radius: 50%; transition: transform .15s; }
+.switch input:checked + span { background: var(--green); }
+.switch input:checked + span::after { transform: translateX(16px); }
+.switch input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.adm-login { width: 100%; max-width: 360px; display: flex; flex-direction: column; gap: 14px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 26px; }
+.adm-login label, .adm-modal-body label { display: flex; flex-direction: column; gap: 5px; font-size: .88rem; font-weight: 600; }
+.adm-login input, .adm-modal input:not([type=checkbox]), .adm-modal select, .adm-modal textarea { padding: 9px 11px; border: 1px solid #cfd4da; border-radius: var(--radius); font-weight: 400; width: 100%; }
+.adm-back { text-align: center; color: var(--muted); font-size: .88rem; }
+.adm-error { color: #b42318; background: #fef3f2; border-radius: var(--radius); padding: 8px 10px; margin: 0; font-size: .88rem; }
+
+.adm-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, .45); display: grid; place-items: center; padding: 16px; z-index: 100; overflow-y: auto; }
+.adm-modal { background: var(--surface); border-radius: 10px; width: 100%; max-width: 640px; max-height: calc(100vh - 32px); display: flex; flex-direction: column; }
+.adm-modal-head { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; border-bottom: 1px solid var(--border); }
+.adm-modal-head h2 { font-size: 1.15rem; }
+.adm-x { background: none; border: 0; font-size: 1.6rem; line-height: 1; cursor: pointer; color: var(--muted); }
+.adm-modal-body { padding: 18px 20px; overflow-y: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 14px; align-items: end; }
+.adm-modal-body .span-2 { grid-column: 1 / -1; }
+.adm-modal small { font-weight: 400; color: var(--muted); }
+.adm-discount { align-self: end; color: var(--muted); font-size: .88rem; padding-bottom: 10px; }
+.adm-image { display: flex; gap: 14px; align-items: flex-start; }
+.adm-image img { width: 96px; height: 96px; object-fit: cover; border-radius: var(--radius); background: #f1f2f4; flex-shrink: 0; }
+.adm-image > div { flex: 1; display: flex; flex-direction: column; gap: 8px; align-items: flex-start; font-size: .88rem; font-weight: 600; }
+.adm-modal-body label.adm-upload { flex-direction: row; justify-content: center; align-items: center; width: auto; padding: 7px 14px; font-size: .88rem; cursor: pointer; }
+.adm-flags { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.adm-flags label { flex-direction: row !important; align-items: center; gap: 8px !important; font-weight: 500 !important; }
+.adm-modal .adm-error { margin: 0 20px; }
+.adm-modal-foot { display: flex; justify-content: flex-end; gap: 10px; padding: 14px 20px; border-top: 1px solid var(--border); margin-top: 12px; }
+.adm-toast { position: fixed; bottom: 22px; left: 50%; transform: translateX(-50%); background: #1f2328; color: #fff; padding: 10px 18px; border-radius: 8px; font-size: .9rem; z-index: 200; box-shadow: 0 6px 20px rgba(0, 0, 0, .3); }
+
+@media (max-width: 640px) {
+  .adm-stats { grid-template-columns: repeat(2, 1fr); }
+  .adm-modal-body, .adm-flags { grid-template-columns: 1fr; }
+  .adm-banner { flex-direction: column; align-items: flex-start; }
+}
