@@ -5,8 +5,8 @@ export const store = {
   logo: '/logo-mark.svg',
   currency: 'OMR',
   // International format, digits only (no + or spaces). Used for the WhatsApp button and checkout.
-  whatsapp: '96800000000',
-  phone: '+968 0000 0000',
+  whatsapp: '923080146122',
+  phone: '+92 308 0146122',
   email: 'hello@example.com',
   address: 'Muscat, Oman',
 }
