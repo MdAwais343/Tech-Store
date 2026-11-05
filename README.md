@@ -27,14 +27,16 @@ Add, edit and delete products, upload photos, and switch **Deal**, **Featured** 
 
 1. Create a project at supabase.com.
 2. **Authentication → Users → Add user**: create your admin email and password (tick *Auto Confirm*). Then **Authentication → Sign In / Providers → Email**: turn off *Allow new users to sign up*.
-3. Open `supabase/schema.sql`, replace `admin@example.com` with your admin email, then paste the whole file into **SQL Editor → New query → Run**. This creates the `products` table, the `product-images` storage bucket, the security rules and the starter products.
+3. Open `supabase/schema.sql`, replace `CHANGE-ME@example.com` with your admin email (the one from step 2), then paste the whole file into **SQL Editor → New query → Run**. This creates the `products` table, the `product-images` storage bucket, the security rules and the starter products. To add another admin later, run `insert into public.admins (email) values ('someone@example.com');`.
 4. **Project Settings → API**: copy the *Project URL* and the *anon public* key.
 5. Locally: copy `.env.example` to `.env.local` and paste both values. On Vercel: **Settings → Environment Variables**, add `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY`, then redeploy.
 6. Open `/admin` and sign in.
 
-**Security:** the anon key is public by design. Only the email(s) listed in `public.is_admin()` can add, edit or delete products or upload images. Everyone else can only read. Never put the `service_role` key in this app.
+**Security:** the anon key is public by design. Only the emails in the `public.admins` table can add, edit or delete products or upload images. Everyone else can only read. Never put the `service_role` key in this app.
 
 ## Where the images live
+
+The 13 starter product photos in `public/images/products/` are free-licence stock photos from Unsplash. They are stand-ins: replace them with photos of the products you actually sell (dashboard → Edit → Upload photo).
 
 Photos you upload in the dashboard go to your Supabase `product-images` bucket (public URLs, resized to max 1000px). You can also use any of the options below. Replace the generated placeholder images using any ONE of these:
 

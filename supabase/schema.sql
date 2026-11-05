@@ -1,18 +1,28 @@
--- Run this whole file once in Supabase: Dashboard -> SQL Editor -> New query -> paste -> Run.
--- It is safe to re-run (it will not duplicate the table, policies or bucket).
+-- Noor Tech Store database setup.
+-- Supabase dashboard -> SQL Editor -> New query -> paste everything -> Run.
+-- Safe to run more than once.
 
--- 1) WHO IS AN ADMIN ---------------------------------------------------------------
--- Replace the email below with the admin account you create under Authentication -> Users.
--- Add more emails inside the array, separated by commas.
+-- 1) ADMINS: only these emails can add, edit or delete products and upload photos.
+--    To add another admin later: insert into public.admins (email) values ('someone@example.com');
+create table if not exists public.admins (email text primary key);
+alter table public.admins enable row level security;  -- no policies: hidden from the public API
+
+insert into public.admins (email) values (lower('CHANGE-ME@example.com')) on conflict do nothing;
+
 create or replace function public.is_admin()
 returns boolean
 language sql
 stable
+security definer
+set search_path = public
 as $$
-  select coalesce((auth.jwt() ->> 'email') = any (array['admin@example.com']), false)
+  select exists (
+    select 1 from public.admins
+    where lower(email) = lower(coalesce(auth.jwt() ->> 'email', ''))
+  )
 $$;
 
--- 2) PRODUCTS TABLE ----------------------------------------------------------------
+-- 2) PRODUCTS TABLE
 create table if not exists public.products (
   id            bigint generated always as identity primary key,
   title         text    not null,
@@ -41,7 +51,7 @@ create policy "Admins manage products"
   on public.products for all to authenticated
   using (public.is_admin()) with check (public.is_admin());
 
--- 3) IMAGE STORAGE -----------------------------------------------------------------
+-- 3) PRODUCT PHOTO STORAGE
 insert into storage.buckets (id, name, public)
 values ('product-images', 'product-images', true)
 on conflict (id) do nothing;
@@ -65,25 +75,22 @@ create policy "Admins delete product images"
   on storage.objects for delete to authenticated
   using (bucket_id = 'product-images' and public.is_admin());
 
--- 4) STARTER PRODUCTS (optional: delete this block if you want to start empty) ------
+-- 4) STARTER PRODUCTS (only added while the table is empty; delete this block to start with no products)
 insert into public.products
   (title, label, category, price, old_price, rating, image, description, is_deal, featured, free_delivery, in_stock)
 select * from (values
-  ('5L Digital Air Fryer, 1700W', 'Air Fryer', 'Kitchen', 24.9, 39.9, 4.5, '/images/products/air-fryer.svg', 'Cook crispy meals with up to 90% less oil. Eight presets and a dishwasher-safe basket.', true, false, true, true),
-  ('Waterproof Fitness Band with Step Counter', 'Fitness Band', 'Wearables', 4.5, 9, 3.5, '/images/products/fitness-band.svg', 'Track steps, sleep and heart rate on a slim, comfortable band.', true, false, true, true),
-  ('Cordless Car Vacuum Cleaner', 'Car Vacuum', 'Car', 6.9, 11.5, 4, '/images/products/car-vacuum.svg', 'Strong suction in a pocket-sized body. Includes crevice tool and HEPA filter.', true, false, true, true),
-  ('5-Speed Electric Hand Mixer', 'Hand Mixer', 'Kitchen', 5.5, null, 3.5, '/images/products/hand-mixer.svg', 'Lightweight mixer with whisk and dough-hook attachments, ideal for baking.', false, false, true, true),
-  ('Foldable LED Desk Lamp with 3 Colour Modes', 'LED Desk Lamp', 'Home', 6.5, null, 4, '/images/products/desk-lamp.svg', 'Touch dimmer, three colour temperatures and a USB-C rechargeable battery.', false, false, true, true),
-  ('Portable Waterproof Bluetooth Speaker', 'Bluetooth Speaker', 'Gadgets', 9.9, 16.5, 4.5, '/images/products/bluetooth-speaker.svg', 'Powerful bass, IPX6 splash resistance and a 12-hour battery for the beach or the garden.', true, false, true, true),
-  ('Bluetooth 5.3 Wireless Earbuds with Charging Case', 'Wireless Earbuds', 'Gadgets', 7.9, 15.8, 4, '/images/products/wireless-earbuds.svg', 'Clear sound, touch controls and up to 24 hours of playtime with the charging case.', true, false, true, true),
-  ('Smart Watch with Heart-Rate and Sleep Tracking', 'Smart Watch', 'Wearables', 14.9, 29.8, 4, '/images/products/smart-watch.svg', 'AMOLED display, 7-day battery, notifications and 20+ sport modes. Works with Android and iOS.', true, false, true, true),
-  ('Over-Sink Stainless Steel Dish Rack', 'Dish Rack', 'Kitchen', 11, 25.6, 4, '/images/products/dish-rack.svg', 'Extendable two-tier rack with cutlery holder and drip tray. Saves counter space.', true, true, true, true),
-  ('Adjustable Back Support Posture Belt', 'Posture Belt', 'Health', 4.9, 7.3, 3.5, '/images/products/posture-belt.svg', 'Breathable lumbar support belt with adjustable straps for all-day comfort.', true, true, true, true),
-  ('Digital Blood Glucose Monitor Kit', 'Glucose Monitor', 'Health', 9.5, 28, 4.5, '/images/products/glucose-monitor.svg', 'Fast, accurate readings with a large display. Includes lancets, test strips and carry case.', true, true, true, true),
-  ('Full HD Rear-View Mirror Dash Camera', 'Dash Cam Mirror', 'Car', 12.9, 27.4, 4, '/images/products/dash-cam-mirror.svg', 'Mirror-mounted dash cam with loop recording, night vision and a reversing camera input.', true, true, true, true),
-  ('Rechargeable 9-in-1 Cordless Cleaning Brush', '9-in-1 Cleaning Brush', 'Cleaning', 5.9, 11.6, 4.5, '/images/products/cleaning-brush.svg', 'Nine interchangeable heads, extendable handle and USB charging. Cleans bathrooms, kitchens and cars.', true, true, true, true),
-  ('Self-Squeeze Portable Mini Mop', 'Mini Mop', 'Cleaning', 3.5, 5.4, 4, '/images/products/mini-mop.svg', 'Compact squeeze mop with a microfibre head. Perfect for glass, tiles and tight corners.', true, true, true, true),
-  ('Powerful 4500W Double Jar Blender', 'Double Jar Blender', 'Kitchen', 8.9, 27.8, 4, '/images/products/double-jar-blender.svg', 'Two jars for wet and dry grinding, stainless steel blades and a high-torque motor for smoothies, spices and sauces.', true, true, true, true),
-  ('Premium Stainless Steel Vacuum Flask Gift Set', 'Vacuum Flask Set', 'Kitchen', 4.5, 9, 4, '/images/products/vacuum-flask-set.svg', 'Double-wall insulated flasks that keep drinks hot for 12 hours and cold for 24. Comes in a gift box with matching cups.', true, true, true, true)
+  ('Drip Coffee Maker and Grinder Set', 'Coffee Maker', 'Kitchen', 39, 55, 4, '/images/products/coffee-brewer.jpg', 'Grind fresh beans and brew into a thermal carafe that keeps coffee hot for hours.', true, false, true, true),
+  ('Semi-Automatic Espresso Machine', 'Espresso Machine', 'Kitchen', 69, 99, 4.5, '/images/products/espresso-machine.jpg', '15-bar pressure pump, steam wand for milk and a removable water tank. Café coffee at home.', true, false, true, true),
+  ('Stainless Steel Whistling Tea Kettle', 'Tea Kettle', 'Kitchen', 4.9, 7.9, 3.5, '/images/products/stainless-kettle.jpg', 'Classic stovetop kettle with a heat-safe handle and a whistle that tells you when the water is ready.', true, false, true, true),
+  ('Stainless Steel Vacuum Flask, 1L', 'Vacuum Flask', 'Kitchen', 5.5, 9, 4, '/images/products/vacuum-flask.jpg', 'Double-wall insulation keeps drinks hot for 12 hours and cold for 24. Comes with a cup lid.', true, false, true, true),
+  ('Adjustable Arm LED Desk Lamp', 'LED Desk Lamp', 'Home', 6.5, null, 4, '/images/products/desk-lamp.jpg', 'Flexible arm, warm and cool light modes and a sturdy base. Ideal for study and work.', false, false, true, true),
+  ('Compact Mechanical Keyboard with Colour Keycaps', 'Mechanical Keyboard', 'Computers', 18.9, 29.9, 4.5, '/images/products/mechanical-keyboard.jpg', 'Tactile switches, compact 87-key layout and durable keycaps for typing and gaming.', true, true, true, true),
+  ('2.4G Wireless Ergonomic Mouse', 'Wireless Mouse', 'Computers', 3.9, null, 4, '/images/products/wireless-mouse.jpg', 'Comfortable ergonomic shape, silent clicks and a USB receiver that works up to 10 metres away.', false, true, true, true),
+  ('10000mAh Slim Power Bank with Fast Charging', 'Power Bank', 'Gadgets', 7.5, 12.5, 4.5, '/images/products/power-bank.jpg', 'Slim and light, charges two devices at once. Comes with a 3-in-1 charging cable.', true, true, true, true),
+  ('Foldable Over-Ear Headphones with Mic', 'Headphones', 'Audio', 8.5, 14.9, 4, '/images/products/headphones.jpg', 'Soft ear cushions, foldable design and a built-in microphone for calls. 3.5 mm cable included.', true, true, true, true),
+  ('Mini Portable Bluetooth Speaker with Strap', 'Bluetooth Speaker', 'Audio', 6.9, 11.5, 4.5, '/images/products/bluetooth-speaker.jpg', 'Pocket-sized speaker with punchy bass, a carry strap and up to 10 hours of battery.', true, true, true, true),
+  ('True Wireless Earbuds with Charging Case', 'Wireless Earbuds', 'Audio', 7.9, 15.8, 4, '/images/products/wireless-earbuds.jpg', 'Bluetooth 5.3, clear sound, touch controls and up to 24 hours of playtime with the charging case.', true, true, true, true),
+  ('Waterproof Fitness Band with Colour Display', 'Fitness Band', 'Wearables', 4.5, 9, 3.5, '/images/products/fitness-band.jpg', 'Track steps, sleep and heart rate on a slim, comfortable band with a bright colour screen.', true, true, true, true),
+  ('Smart Watch with Heart-Rate and Sleep Tracking', 'Smart Watch', 'Wearables', 14.9, 29.8, 4, '/images/products/smart-watch.jpg', 'AMOLED display, 7-day battery, notifications and 20+ sport modes. Works with Android and iOS.', true, true, true, true)
 ) as v(title, label, category, price, old_price, rating, image, description, is_deal, featured, free_delivery, in_stock)
 where not exists (select 1 from public.products);
