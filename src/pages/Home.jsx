@@ -1,8 +1,8 @@
 import { Link } from 'react-router-dom'
+import Hero from '../components/Hero.jsx'
 import ProductGrid from '../components/ProductGrid.jsx'
-import Slider from '../components/Slider.jsx'
 import { useProducts } from '../context/ProductsContext.jsx'
-import { discountPercent, slides } from '../data/products'
+import { discountPercent } from '../data/products'
 
 export default function Home() {
   const { products } = useProducts()
@@ -15,7 +15,7 @@ export default function Home() {
 
   return (
     <div className="container">
-      <Slider slides={slides} />
+      <Hero />
 
       <section className="section">
         <div className="section-head">

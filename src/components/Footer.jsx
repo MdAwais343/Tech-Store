@@ -1,8 +1,16 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { store } from '../config'
+import { Facebook, Instagram, TikTok, XLogo } from './icons.jsx'
 
 const year = new Date().getFullYear()
+
+const socials = [
+  { key: 'facebook', label: 'Facebook', Icon: Facebook },
+  { key: 'instagram', label: 'Instagram', Icon: Instagram },
+  { key: 'tiktok', label: 'TikTok', Icon: TikTok },
+  { key: 'x', label: 'X', Icon: XLogo },
+]
 
 export default function Footer() {
   const [email, setEmail] = useState('')
@@ -44,6 +52,27 @@ export default function Footer() {
               <button type="submit" className="btn">Subscribe</button>
             </form>
           )}
+        </section>
+        <section>
+          <h4>Follow us</h4>
+          <ul className="social">
+            {socials.map(({ key, label, Icon }) => {
+              const href = store.social?.[key]
+              return (
+                <li key={key}>
+                  {href ? (
+                    <a className="social-icon" href={href} target="_blank" rel="noreferrer" aria-label={label}>
+                      <Icon />
+                    </a>
+                  ) : (
+                    <span className="social-icon" role="img" aria-label={label}>
+                      <Icon />
+                    </span>
+                  )}
+                </li>
+              )
+            })}
+          </ul>
         </section>
       </div>
       <div className="container footer-bottom">

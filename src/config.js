@@ -9,4 +9,6 @@ export const store = {
   phone: '+92 308 0146122',
   email: 'hello@example.com',
   address: 'Muscat, Oman',
+  // Social profiles. Empty = the icon shows with no link. Paste a full URL (https://...) to make it a link.
+  social: { facebook: '', instagram: '', tiktok: '', x: '' },
 }

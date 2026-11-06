@@ -21,10 +21,19 @@ const catalogue = [
   { id: 13, slug: 'coffee-brewer', category: 'Kitchen', label: 'Coffee Maker', title: 'Drip Coffee Maker and Grinder Set', price: 39.0, oldPrice: 55.0, rating: 4, image: '/images/products/coffee-brewer.jpg', description: 'Grind fresh beans and brew into a thermal carafe that keeps coffee hot for hours.' },
 ]
 
-export const slides = [
-  { id: 1, image: '/images/banners/slide-1.svg', alt: 'Smart watches and wearables', to: '/products?category=Wearables' },
-  { id: 2, image: '/images/banners/slide-2.svg', alt: 'Kitchen essentials with free delivery', to: '/products?category=Kitchen' },
-  { id: 3, image: '/images/banners/slide-3.svg', alt: 'Super deals while stocks last', to: '/deals' },
+// Home page hero. The slides and promo cards are built from the live product list (by category, or by the
+// Deal flag), so the photo, "from" price and discount always match what you sell. A slide or card with no
+// matching products is hidden automatically. `category` must match a product category exactly, and a promo's
+// optional `pick` chooses the photo from the product whose title contains that word (else the newest one).
+export const heroSlides = [
+  { id: 'wearables', category: 'Wearables', headline: ['Smart watches', '& wearables'], text: 'Heart-rate and sleep tracking, a week of battery and free delivery on every order.', cta: 'Shop wearables' },
+  { id: 'computers', category: 'Computers', headline: ['Upgrade your', 'desk setup'], text: 'Keyboards and mice for work, study and gaming, with free delivery on every order.', cta: 'Shop computers' },
+  { id: 'deals', source: 'deals', headline: ['Super deals,', 'while stock lasts'], text: 'Hand-picked discounts on tech and kitchen essentials, with free delivery on every order.', cta: 'Shop deals' },
+]
+
+export const promoCards = [
+  { category: 'Audio', title: 'Earbuds, speakers and headphones', cta: 'Shop audio', tone: 'blue', pick: 'headphones' },
+  { category: 'Kitchen', title: 'Coffee makers, flasks and kettles', cta: 'Shop kitchen', tone: 'warm', pick: 'espresso' },
 ]
 
 // Flags: `deal` lists it under Deals, `featured` under Recommended, plus delivery and stock.

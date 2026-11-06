@@ -1,6 +1,6 @@
 # Noor Tech Store – React storefront
 
-A Vite + React store with a banner slider, product grid, search, deals, product pages and a cart that checks out over WhatsApp. No backend required.
+A Vite + React store with a hero carousel, product grid, search, deals, product pages and a cart that checks out over WhatsApp. No backend required.
 
 ```bash
 npm install
@@ -13,7 +13,8 @@ npm run build    # production build in /dist
 | What | Where |
 | --- | --- |
 | Store name, currency, WhatsApp number, email, phone | `src/config.js` |
-| Products, prices, deals, stock | The **/admin** dashboard (see below). `src/data/products.js` only holds the starter list and the banner slides |
+| Products, prices, deals, stock | The **/admin** dashboard (see below). `src/data/products.js` holds the starter list and the hero setup |
+| Hero carousel and the two promo cards on the home page | `heroSlides` and `promoCards` in `src/data/products.js`. They pick their photo, "from" price and discount from your products by category (or the Deal flag), and hide themselves when a category has no products |
 | Colours | CSS variables at the top of `src/index.css` |
 | About / Why us / Delivery / Privacy / Terms text | `src/pages/InfoPage.jsx` |
 
@@ -47,7 +48,7 @@ Put files in `public/images/products/` and point to them in `src/data/products.j
 image: '/images/products/my-flask.jpg'
 ```
 
-Anything in `public/` is deployed by Vercel as-is. Banner images go in `public/images/banners/`. Tips: use JPG/WebP, about 800×800 px for products and 1380×420 px for banners, and keep each file under ~200 KB.
+Anything in `public/` is deployed by Vercel as-is. Tips: use JPG/WebP at about 800×800 px, and keep each file under ~200 KB. The home page hero has no banner images of its own: it uses the photos of your products.
 
 ### Option 2 – External image hosting (best once you have many products)
 Upload to a service and paste the full URL as `image`:
